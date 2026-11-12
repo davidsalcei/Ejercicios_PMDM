@@ -1,0 +1,29 @@
+val coches: List<Coche> = listOf(
+    Coche(
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR5j18qYrIYg0tQHbSM4HI6Bmx9z-uRCFGwABzX6NJTZGu0QA7JP7vda6mP&s=10",
+        "Volkswagen Polo",
+        "El Volkswagen Polo es un automóvil de turismo del segmento B producido por el fabricante alemán de automóviles Volkswagen desde 1975. Su nombre deriva del deporte Polo. A lo largo de su historia se ha vendido con carrocerías hatchback de tres y cinco puertas, sedán de dos y cuatro puertas y familiar de cinco puertas. El modelo es un cinco plazas con motor delantero transversal y tracción delantera. Ha sido producido durante seis generaciones.",
+        "150",
+        "5.5L",
+        "16.900 €",
+        "https://es.wikipedia.org/wiki/Volkswagen_Polo"
+    ),
+    Coche(
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ8bSU_l96ASUuHPPXASHCnjXoj1RkwzPZ2kIhdWZiwPf6Kfk478A1ectJZ&s=10",
+        "Renault Clio IV",
+        "El Renault Clio es un automóvil de turismo perteneciente al segmento B producido por el fabricante de automóviles francés Renault. Se comenzó a comercializar desde 2000 como sucesor del Renault Supercinco. El Clio no se comercializa con este nombre en todos los países. En Japón es conocido por el de Lutecia, nombre que alude al origen romano de la ciudad de París.",
+        "90",
+        "8L",
+        "12.000 €",
+        "https://es.wikipedia.org/wiki/Renault_Clio"
+    ),
+    Coche(
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQrfXZ6wuPNaYCwH20jVuetCTRMLRwBseIgvV62qu899ikWxhvYwgF9M0M&s=10",
+        "Mercedes C220d",
+        "El Mercedes-Benz Clase C es un automóvil de turismo de lujo del segmento D producido por el fabricante alemán Mercedes-Benz desde el año 1993. Es el sucesor del Mercedes-Benz 190 (W201). Algunos de sus principales rivales han sido el BMW Serie 3, los Audi A4 y Audi A5, el Lexus IS, el Saab 9-3, el Infiniti G, el Jaguar X-Type y el Volvo S60.",
+        "200",
+        "4.5L",
+        "40.000 €",
+        "https://es.wikipedia.org/wiki/Mercedes-Benz_Clase_C"
+    )
+)

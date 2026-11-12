@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">EjerciciosClase</string>
+    <string name="descripcion_leon">Es una imagen de un leon</string>
+    <string name="descripcion_3060">Es una 3060</string>
+</resources>
