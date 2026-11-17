@@ -32,9 +32,9 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.room.Room
 import es.iesjulianmarias.ejerciciosclase.navigation.AppScreens
-import es.iesjulianmarias.ejerciciosclase.practicas.practica3.db.CocheData
+import es.iesjulianmarias.ejerciciosclase.practicas.practica3.db.entities.CocheData
 import es.iesjulianmarias.ejerciciosclase.practicas.practica3.db.DatabaseCoche
-import es.iesjulianmarias.ejerciciosclase.practicas.practica3.db.EstructuraCoche
+import es.iesjulianmarias.ejerciciosclase.practicas.practica3.db.Estructura
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -53,7 +53,7 @@ fun FormularioCoche(navController: NavController) {
     val context = LocalContext.current
 
     // Se crea una instancia de la base de datos local, indicando el contexto, la clase base de datos y el nombre del archivo, permitiendo consultas en el hilo principal.
-    val db = Room.databaseBuilder(context, DatabaseCoche::class.java, EstructuraCoche.DataBase.NAME)
+    val db = Room.databaseBuilder(context, DatabaseCoche::class.java, Estructura.DataBase.NAME)
         .allowMainThreadQueries().build()
 
     // Obtención del DAO en cocheD, es decir, la interfaz para realizar operaciones CRUD sobre la tabla.
@@ -94,6 +94,7 @@ fun FormularioCoche(navController: NavController) {
                 modifier = Modifier.width(300.dp),
                 colors = OutlinedTextFieldDefaults.colors(
                     unfocusedBorderColor = Color.White,
+                    focusedTextColor = Color.White
                 )
             )
 
@@ -106,6 +107,7 @@ fun FormularioCoche(navController: NavController) {
                 modifier = Modifier.width(300.dp),
                 colors = OutlinedTextFieldDefaults.colors(
                     unfocusedBorderColor = Color.White,
+                    focusedTextColor = Color.White
                 )
             )
 
@@ -118,6 +120,7 @@ fun FormularioCoche(navController: NavController) {
                 modifier = Modifier.width(300.dp),
                 colors = OutlinedTextFieldDefaults.colors(
                     unfocusedBorderColor = Color.White,
+                    focusedTextColor = Color.White
                 )
             )
 
@@ -130,6 +133,7 @@ fun FormularioCoche(navController: NavController) {
                 modifier = Modifier.width(300.dp),
                 colors = OutlinedTextFieldDefaults.colors(
                     unfocusedBorderColor = Color.White,
+                    focusedTextColor = Color.White
                 )
             )
 
@@ -142,6 +146,7 @@ fun FormularioCoche(navController: NavController) {
                 modifier = Modifier.width(300.dp),
                 colors = OutlinedTextFieldDefaults.colors(
                     unfocusedBorderColor = Color.White,
+                    focusedTextColor = Color.White
                 )
             )
 
@@ -154,6 +159,7 @@ fun FormularioCoche(navController: NavController) {
                 modifier = Modifier.width(300.dp),
                 colors = OutlinedTextFieldDefaults.colors(
                     unfocusedBorderColor = Color.White,
+                    focusedTextColor = Color.White
                 )
             )
 
@@ -166,6 +172,7 @@ fun FormularioCoche(navController: NavController) {
                 modifier = Modifier.width(300.dp),
                 colors = OutlinedTextFieldDefaults.colors(
                     unfocusedBorderColor = Color.White,
+                    focusedTextColor = Color.White
                 )
             )
 

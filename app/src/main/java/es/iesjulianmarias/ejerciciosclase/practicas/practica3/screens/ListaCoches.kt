@@ -41,9 +41,9 @@ import androidx.navigation.NavController
 import androidx.room.Room
 import coil.compose.AsyncImage
 import es.iesjulianmarias.ejerciciosclase.navigation.AppScreens
-import es.iesjulianmarias.ejerciciosclase.practicas.practica3.db.CocheData
+import es.iesjulianmarias.ejerciciosclase.practicas.practica3.db.entities.CocheData
 import es.iesjulianmarias.ejerciciosclase.practicas.practica3.db.DatabaseCoche
-import es.iesjulianmarias.ejerciciosclase.practicas.practica3.db.EstructuraCoche
+import es.iesjulianmarias.ejerciciosclase.practicas.practica3.db.Estructura
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -52,7 +52,7 @@ fun ListaCoches(navController: NavController) {
     val context = LocalContext.current
 
     // Se crea una instancia de la base de datos, indicando el contexto, la clase base de datos y el nombre del archivo, permitiendo consultas en el hilo principal.
-    val db = Room.databaseBuilder(context, DatabaseCoche::class.java, EstructuraCoche.DataBase.NAME)
+    val db = Room.databaseBuilder(context, DatabaseCoche::class.java, Estructura.DataBase.NAME)
         .allowMainThreadQueries().build()
 
     // La aplicación está corriendo en un hilo, pero cuando nosotros estamos almacenando los datos, estos datos corren en un hilo distinto al que está corriendo la aplicación y eso no es la mejor solución para producción .

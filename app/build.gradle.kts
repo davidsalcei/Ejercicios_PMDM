@@ -40,12 +40,6 @@ android {
 
 dependencies {
 
-    // Para la base de datos (SQlite)
-    implementation("androidx.room:room-runtime:2.8.5")
-    implementation(libs.androidx.material3)
-    ksp("androidx.room:room-compiler:2.8.5")
-    implementation("androidx.room:room-ktx:2.8.5")
-
     // Para la navegacion entre ventanas de la aplicacion
     implementation("androidx.navigation:navigation-compose:2.9.7")
 
@@ -60,6 +54,11 @@ dependencies {
 
     // Para imagenes
     implementation("io.coil-kt:coil-compose:2.7.0")
+
+    // Para la base de datos (SQlite)
+    implementation("androidx.room:room-runtime:2.8.5")
+    ksp("androidx.room:room-compiler:2.8.5")
+    implementation("androidx.room:room-ktx:2.8.5")
 
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.activity.compose)

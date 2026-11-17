@@ -36,16 +36,16 @@ import androidx.room.Room
 import coil.compose.AsyncImage
 import com.composables.icons.lucide.ArrowLeft
 import com.composables.icons.lucide.Lucide
-import es.iesjulianmarias.ejerciciosclase.practicas.practica3.db.CocheData
+import es.iesjulianmarias.ejerciciosclase.practicas.practica3.db.entities.CocheData
 import es.iesjulianmarias.ejerciciosclase.practicas.practica3.db.DatabaseCoche
-import es.iesjulianmarias.ejerciciosclase.practicas.practica3.db.EstructuraCoche
+import es.iesjulianmarias.ejerciciosclase.practicas.practica3.db.Estructura
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SoloCoche(navController: NavController, titulo: String?) {
 
     val context = LocalContext.current // Necesario para Room y Toasts
-    val db = Room.databaseBuilder(context, DatabaseCoche::class.java, EstructuraCoche.DataBase.NAME)
+    val db = Room.databaseBuilder(context, DatabaseCoche::class.java, Estructura.DataBase.NAME)
         .allowMainThreadQueries().build() // Instanciar base de datos
     var coche: CocheData?
 
