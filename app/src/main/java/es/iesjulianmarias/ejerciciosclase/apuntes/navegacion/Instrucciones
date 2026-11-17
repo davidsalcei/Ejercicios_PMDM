@@ -1,0 +1,27 @@
+Pasos para navegacion:
+    - Crear dos ventanas para movernos entre ellas
+		- Primera ventana(navController: navController): texto Primera ventana + boton para ir a Segunda ventana
+			- En el onClick del boton: navController.navigate(route = AppScreens.NOMBRE_VENTANA.route)
+		- Segunda ventana(navController: navController): texto Segunda ventana + boton para ir atrás (navController.popBackStack)
+			- En el onClick del boton: navController.popBackStack
+
+	- Crear sealed class que será donde guardamos las ventanas: sealed class AppScreens (val route: String)
+		- Cada ventana: object NOMBRE_VENTANA: AppScreens("NOMBRE_VENTANA")
+
+	- Crear archivo navegacion (kt normal) - AppNavigation:
+		- Poner en el build.gradle.kts: implementation ("androidx.navigation:navigation-compose:2.9.7")
+		- val navController = rememberNavController()
+		- NavHost(navController = navController, startDestination = AppScreens.NOMBRE_VENTANA.route) {
+		- composable(route = AppScreens.NOMBRE_VENTANA.route) {
+		- NOMBRE_VENTANA(navController)}}
+	- En la clase Main, poner direccion a la navegacion (AppNavigation)
+
+Pasos para navegacion con argumentos:
+	- En el AppNavigation: en el composable(route + "/{VARIABLE_A_PASAR}") LA / ES OBLIGATORIA YA QUE ES UNA RUTA
+		- Despues poner: arguments = listOf(navArgument(name = "VARIABLE_A_PASAR") {
+			- type = NavType.TIPO_VARIABLE}{
+				- Llamar la funcion: NOMBRE_VENTANA(navController, it.arguments?.getTIPO_VATIABLE())}
+	- Despues de eso, en la segunda ventana o la que queramos pasarle algo: poner de argumento el mismo nombre con una ? (parametro opcional con nulos) text: String?
+	- En la primera ventana, en route, concatenamos lo que queremos pasar (+ "/LO_QUE_SEA)
+
+	Y ASI CON TODOS LOS ARGUMENTOS QUE SE QUIERAN

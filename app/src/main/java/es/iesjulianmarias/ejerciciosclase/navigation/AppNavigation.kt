@@ -30,7 +30,7 @@ fun AppNavigation() {
     NavHost(
         navController = navController,
         //startDestination = if (sesionDao == null) AppScreens.Inicio.route else AppScreens.Resultados.route
-        startDestination = AppScreens.VentanaListaCoches.route
+        startDestination = AppScreens.FormularioCoche.route
     ) {
         // Ejercicio 6 - Navegacion
         composable(route = AppScreens.PrimeraVentana.route) {

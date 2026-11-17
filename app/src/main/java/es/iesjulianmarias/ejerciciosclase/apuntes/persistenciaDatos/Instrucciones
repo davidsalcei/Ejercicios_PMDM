@@ -1,0 +1,84 @@
+1. Estructura / Creacion (clase)
+2. Entidad / Relacion (archivo.kt) @Entity = define una tabla
+3. DAO / Consultas (interfaz) @Dao = define las operarciones/consultas
+4. Base de datos (clase) = @Database = define base de datos y tablas
+
+=====================================================================================================================================
+Estructura (clase): class que contiene los objetos de las tablas y la BD. CREACION / ESTRUCTURA DE CREACION
+	- object DB { name = ".db }
+	- object NOMBRE { nombre de cada campos de la tabla }
+
+class Estructura {
+    // Base de datos - Nombre
+    object DB {
+        const val NAME = "DBUsuarios.db"
+    }
+
+    // Tablas
+    object Usuario {
+        const val TABLE_NAME = "USUARIOS"
+        const val IDUSUARIO = "idUsuario"
+        const val NOMBRE = "nombreUsuario"
+        const val PASSWORD = "password"
+        const val EMAIL = "email"
+    }
+}
+
+=====================================================================================================================================
+Entidad (.kt): data class que contiene los campos que va a tener en la BD. RELACION
+	- @Entity( tableName = NOMBRE_TABLA )
+	- data class NOMBRE( @PrimaryKey y @ColumnInfo de cada dato en la tabla )
+	- indices = [Index(value = [] , unique = true)]
+	    - Crea un indice para localizar registros rapidamente sin tener que recorrer toda la tabla
+	    - unique hace referencia a que ese dato no se puede repetir, en caso de tener un email no podria existir el mismo dos veces
+	- PrimaryKey vs Unique:
+	    - No puede repetirse, no puede ser NULL, solo puede haber una PrimaryKey por tabla.
+	    - No puede repetirse, depende de la SGBD puede tener NULL, puede haber varias Unique por tabla.
+
+*** UsuarioData ***
+@Entity(
+    tableName = Estructura.Usuario.TABLE_NAME,
+    indices = [Index(values = [Estructura.Usuario.EMAIL], unique = true)]
+)
+
+data class UsuarioData(
+    @PrimaryKey(autoGenerate = true)
+    @ColumnInfo (name = Estructura.Usuario.IDUSUARIO) val idUsuario: Int = 0,
+    @ColumnInfo (name = Estructura.Usuario.NOMBRE) val nombreUsuario: String,
+    @ColumnInfo (name = Estructura.Usuario.PASSWORD) val password : String,
+    @ColumnInfo (name = Estructura.Usuario.EMAIL) val email : String
+)
+
+=====================================================================================================================================
+DAO (interface): interface que contiene los metodos para interactuar con la entidad o datos de la tabla.
+	- interface { @Insert (meter datos), @Query (seleccionar datos, borrar, actualizar) }
+	- cada @ va acompañado debajo por una funcion
+
+@Dao
+interface UsuarioDao {
+
+    // Querys con las operaciones que se van hacer
+
+    @Insert // Insertar usuario
+    fun nuevoUsuario(usuarioData: UsuarioData) // Recibe un usuario de UsuarioData
+
+    @Query("SELECT * FROM ${Estructura.Usuario.TABLE_NAME}") // Leer todos los usuarios
+    fun getListaUsuarios(): List<UsuarioData>
+
+    @Query("SELECT * FROM ${Estructura.Usuario.TABLE_NAME} WHERE email = :email") // Leer un usuario por su email
+    fun getUsuario(email: String): UsuarioData?
+
+}
+
+=====================================================================================================================================
+DB (clase): abstract class que contiene una asociacion con la clase DAO para instancialar.
+	- @Database( entities = [DATA::class], version = 1]
+	- entities: lista de tabla que tiene la base de datos
+	- DATA::class: clase que representa con la referencia
+	- exportSchema: exporta el esquema en un JSON
+
+@Database(
+    entities = [UsuarioData::class], version = 1, exportSchema = true
+)
+
+abstract fun usuarioDao(): UsuarioDao
