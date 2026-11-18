@@ -16,6 +16,9 @@ sealed class AppScreens (val route: String) {
     object Resultados: AppScreens("Resultados")
 
     // Practica 3
+    object LoginUsuario: AppScreens("LoginUsuario")
+    object RegisterUsuario: AppScreens("RegisterUsuario")
+    object ListaUsuarios: AppScreens("ListaUsuarios")
     object FormularioCoche: AppScreens("FormularioCoche")
     object ListaCoches: AppScreens("ListaCoches")
     object SoloCoche: AppScreens("SoloCoche")

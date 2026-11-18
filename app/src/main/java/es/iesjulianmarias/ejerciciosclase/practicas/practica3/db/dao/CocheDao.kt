@@ -3,23 +3,22 @@ package es.iesjulianmarias.ejerciciosclase.practicas.practica3.db.dao
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
-import es.iesjulianmarias.ejerciciosclase.practicas.practica3.db.entities.CocheData
 import es.iesjulianmarias.ejerciciosclase.practicas.practica3.db.Estructura
+import es.iesjulianmarias.ejerciciosclase.practicas.practica3.db.entities.CochesData
 
 @Dao
 interface CocheDao {
-    // Querys
 
-    // Insertar coche
     @Insert
-    fun nuevoCoche(cocheData: CocheData)
+    fun nuevoCoche(cochesData: CochesData)
 
-    // Leer toda la lista de coches
-    @Query("SELECT * FROM ${Estructura.Coche.TABLE_NAME}")
-    fun getListaCoches(): List<CocheData>
+    @Query("SELECT * FROM ${Estructura.Coche.TABLE_NAME} WHERE idUsuario = :idUsuario")
+    fun getCochesUsuario(idUsuario: Int): List<CochesData>
 
-    // Leer un coche en concreto a través de su titulo
     @Query("SELECT * FROM ${Estructura.Coche.TABLE_NAME} WHERE titulo = :titulo")
-    fun getUnCoche(titulo: String): CocheData?
+    fun getCochePorTitulo(titulo: String): CochesData?
+
+    @Query("SELECT * FROM ${Estructura.Coche.TABLE_NAME} WHERE idCoche = :idCoche")
+    fun getCochePorID(idCoche: Int): CochesData?
 
 }

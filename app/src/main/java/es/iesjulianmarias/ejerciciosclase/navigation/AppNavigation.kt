@@ -9,6 +9,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import androidx.room.Room
 import es.iesjulianmarias.ejerciciosclase.ejercicios.ejercicio6.screens.PrimeraVentana
 import es.iesjulianmarias.ejerciciosclase.ejercicios.ejercicio6.screens.SegundaVentana
 import es.iesjulianmarias.ejerciciosclase.practicas.practica2.screens.VentanaCoche
@@ -16,22 +17,73 @@ import es.iesjulianmarias.ejerciciosclase.practicas.practica2.screens.VentanaLis
 import es.iesjulianmarias.ejerciciosclase.ejercicios.ejercicio7.Formulario
 import es.iesjulianmarias.ejerciciosclase.ejercicios.ejercicio7.Inicio
 import es.iesjulianmarias.ejerciciosclase.ejercicios.ejercicio7.Resultados
+import es.iesjulianmarias.ejerciciosclase.practicas.practica3.db.AppDB
+import es.iesjulianmarias.ejerciciosclase.practicas.practica3.db.Estructura
 import es.iesjulianmarias.ejerciciosclase.practicas.practica3.screens.FormularioCoche
 import es.iesjulianmarias.ejerciciosclase.practicas.practica3.screens.ListaCoches
+import es.iesjulianmarias.ejerciciosclase.practicas.practica3.screens.ListaUsuarios
+import es.iesjulianmarias.ejerciciosclase.practicas.practica3.screens.LoginUsuario
+import es.iesjulianmarias.ejerciciosclase.practicas.practica3.screens.RegisterUsuario
 import es.iesjulianmarias.ejerciciosclase.practicas.practica3.screens.SoloCoche
 
 @Composable
 fun AppNavigation() {
     val navController = rememberNavController()
     val context = LocalContext.current
-    //val db = Room.databaseBuilder(context, AppDB::class.java, Estructura.DB.NAME).allowMainThreadQueries().build()
-    //val sesionDao = db.sesionDao().getEstadoSesion()
+    val db = Room.databaseBuilder(context, AppDB::class.java, Estructura.DB.NAME).allowMainThreadQueries().build()
+    val sesionDao = db.SesionDao().getEstadoSesion()
 
     NavHost(
         navController = navController,
-        //startDestination = if (sesionDao == null) AppScreens.Inicio.route else AppScreens.Resultados.route
-        startDestination = AppScreens.FormularioCoche.route
+        startDestination = if (sesionDao == null) AppScreens.LoginUsuario.route else AppScreens.ListaUsuarios.route
     ) {
+        composable(route = AppScreens.LoginUsuario.route) {
+            LoginUsuario(navController)
+        }
+        composable(route = AppScreens.RegisterUsuario.route) {
+            RegisterUsuario(navController)
+        }
+        composable(route = AppScreens.ListaUsuarios.route) {
+            ListaUsuarios(navController)
+        }
+
+        // Practica 3
+        composable(
+            route = AppScreens.FormularioCoche.route + "/{id}",
+            arguments = listOf(
+                navArgument(name = "id") {
+                    type = NavType.IntType
+                }
+            )
+        ) {
+            FormularioCoche(navController, it.arguments?.getInt("id"))
+            //BackHandler(false) { } // Sirve para interceptar y manejar el evento del botón físico Atrás del dispositivo. El parámetro true indica que el sistema no ejecutará su comportamiento predeterminado (cerrar la app o regresar a la pantalla anterior).
+        }
+        composable(
+            route = AppScreens.ListaCoches.route + "/{id}",
+            arguments = listOf(
+                navArgument(name = "id") {
+                    type = NavType.IntType
+                }
+            )
+        ) {
+            ListaCoches(navController, it.arguments?.getInt("id"))
+            //BackHandler(false) { } // Sirve para interceptar y manejar el evento del botón físico Atrás del dispositivo. El parámetro true indica que el sistema no ejecutará su comportamiento predeterminado (cerrar la app o regresar a la pantalla anterior).
+        }
+        composable(
+            route = AppScreens.SoloCoche.route + "/{idCoche}",
+            arguments = listOf(
+                navArgument(name = "idCoche") {
+                    type = NavType.IntType
+                }
+            )
+        ) {
+            SoloCoche(navController, it.arguments?.getInt("idCoche"))
+            BackHandler(true) {
+                Toast.makeText(context, "No puedes volver todavía", Toast.LENGTH_SHORT).show()
+            }
+        }
+
         // Ejercicio 6 - Navegacion
         composable(route = AppScreens.PrimeraVentana.route) {
             PrimeraVentana(navController)
@@ -87,30 +139,6 @@ fun AppNavigation() {
                 Toast.makeText(context, "No se puede volver para atrás", Toast.LENGTH_SHORT).show()
             }
             Resultados(navController)
-        }
-
-        // Practica 3
-        composable(route = AppScreens.FormularioCoche.route) {
-            BackHandler(true) { } // Sirve para interceptar y manejar el evento del botón físico Atrás del dispositivo. El parámetro true indica que el sistema no ejecutará su comportamiento predeterminado (cerrar la app o regresar a la pantalla anterior).
-            FormularioCoche(navController)
-        }
-        composable(route = AppScreens.ListaCoches.route) {
-            BackHandler(true) { } // Sirve para interceptar y manejar el evento del botón físico Atrás del dispositivo. El parámetro true indica que el sistema no ejecutará su comportamiento predeterminado (cerrar la app o regresar a la pantalla anterior).
-            ListaCoches(navController)
-        }
-        composable(
-            route = AppScreens.SoloCoche.route + "/{titulo}",
-            arguments = listOf(
-                navArgument(name = "titulo") {
-                    type = NavType.StringType
-                }
-            )
-        ) {
-            SoloCoche(navController, it.arguments?.getString("titulo"))
-            BackHandler(true) {
-                Toast.makeText(context, "No puedes volver todavía", Toast.LENGTH_SHORT).show()
-            }
-
         }
     }
 }

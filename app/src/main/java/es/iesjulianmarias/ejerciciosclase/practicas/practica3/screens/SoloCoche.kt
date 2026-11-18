@@ -36,20 +36,19 @@ import androidx.room.Room
 import coil.compose.AsyncImage
 import com.composables.icons.lucide.ArrowLeft
 import com.composables.icons.lucide.Lucide
-import es.iesjulianmarias.ejerciciosclase.practicas.practica3.db.entities.CocheData
-import es.iesjulianmarias.ejerciciosclase.practicas.practica3.db.DatabaseCoche
+import es.iesjulianmarias.ejerciciosclase.practicas.practica3.db.AppDB
 import es.iesjulianmarias.ejerciciosclase.practicas.practica3.db.Estructura
+import es.iesjulianmarias.ejerciciosclase.practicas.practica3.db.entities.CochesData
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SoloCoche(navController: NavController, titulo: String?) {
+fun SoloCoche(navController: NavController, idCoche: Int?) {
 
+    if (idCoche == null) return
     val context = LocalContext.current // Necesario para Room y Toasts
-    val db = Room.databaseBuilder(context, DatabaseCoche::class.java, Estructura.DataBase.NAME)
+    val db = Room.databaseBuilder(context, AppDB::class.java, Estructura.DB.NAME)
         .allowMainThreadQueries().build() // Instanciar base de datos
-    var coche: CocheData?
-
-    if (titulo == null) return
+    var coche: CochesData?
 
     Scaffold(
         topBar = {
@@ -66,7 +65,7 @@ fun SoloCoche(navController: NavController, titulo: String?) {
                     }
                 })
         }) { innerPadding ->
-        coche = db.cocheDao().getUnCoche(titulo)
+        coche = db.CocheDao().getCochePorID(idCoche)
 
         coche?.let {
             Column(

@@ -41,28 +41,30 @@ import androidx.navigation.NavController
 import androidx.room.Room
 import coil.compose.AsyncImage
 import es.iesjulianmarias.ejerciciosclase.navigation.AppScreens
-import es.iesjulianmarias.ejerciciosclase.practicas.practica3.db.entities.CocheData
-import es.iesjulianmarias.ejerciciosclase.practicas.practica3.db.DatabaseCoche
+import es.iesjulianmarias.ejerciciosclase.practicas.practica3.db.AppDB
 import es.iesjulianmarias.ejerciciosclase.practicas.practica3.db.Estructura
+import es.iesjulianmarias.ejerciciosclase.practicas.practica3.db.entities.CochesData
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ListaCoches(navController: NavController) {
+fun ListaCoches(navController: NavController, id: Int?) {
+
+    if (id == null) return
     // Se obtiene el contexto actual, necesario para construir la base de datos Room y mostrar Toasts.
     val context = LocalContext.current
 
     // Se crea una instancia de la base de datos, indicando el contexto, la clase base de datos y el nombre del archivo, permitiendo consultas en el hilo principal.
-    val db = Room.databaseBuilder(context, DatabaseCoche::class.java, Estructura.DataBase.NAME)
+    val db = Room.databaseBuilder(context, AppDB::class.java, Estructura.DB.NAME)
         .allowMainThreadQueries().build()
 
     // La aplicación está corriendo en un hilo, pero cuando nosotros estamos almacenando los datos, estos datos corren en un hilo distinto al que está corriendo la aplicación y eso no es la mejor solución para producción .
     // Se soluciona temporalmente con .allowMainThreadQueries() y si no, es necesario realizar corrutinas o hilos en background.
 
     // Obtención del DAO, es decir, la interfaz para realizar operaciones CRUD sobre la tabla.
-    var listaCoches = mutableListOf<CocheData>()
+    var listaCoches = mutableListOf<CochesData>()
 
     // Ejecuta la consulta definida en el DAO que recupera todos los usuarios de la tabla.
-    listaCoches = db.cocheDao().getListaCoches().toMutableList()
+    listaCoches = db.CocheDao().getCochesUsuario(id).toMutableList()
 
     // BARRA SUPERIOR
     Scaffold(
@@ -139,7 +141,7 @@ fun ListaCoches(navController: NavController) {
                                     .fillMaxSize()
                                     .padding(start = 20.dp, top = 10.dp),
                                 onClick = {
-                                    navController.navigate(route = AppScreens.SoloCoche.route + "/" + coche.tituloCoche)
+                                    navController.navigate(route = AppScreens.SoloCoche.route + "/${coche.idCoche}")
                                 }
                             ) {
                                 Text(

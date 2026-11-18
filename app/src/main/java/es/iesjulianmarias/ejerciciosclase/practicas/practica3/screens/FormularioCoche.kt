@@ -12,6 +12,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
@@ -31,15 +33,18 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.room.Room
+import com.composables.icons.lucide.ArrowLeft
+import com.composables.icons.lucide.Lucide
 import es.iesjulianmarias.ejerciciosclase.navigation.AppScreens
-import es.iesjulianmarias.ejerciciosclase.practicas.practica3.db.entities.CocheData
-import es.iesjulianmarias.ejerciciosclase.practicas.practica3.db.DatabaseCoche
+import es.iesjulianmarias.ejerciciosclase.practicas.practica3.db.AppDB
 import es.iesjulianmarias.ejerciciosclase.practicas.practica3.db.Estructura
+import es.iesjulianmarias.ejerciciosclase.practicas.practica3.db.entities.CochesData
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun FormularioCoche(navController: NavController) {
+fun FormularioCoche(navController: NavController, id: Int?) {
 
+    if (id == null) return // Comprobar si "id" es nulo
     // Variables de los datos recogidos
     var titulo by rememberSaveable { mutableStateOf("") }
     var descripcion by rememberSaveable { mutableStateOf("") }
@@ -53,11 +58,11 @@ fun FormularioCoche(navController: NavController) {
     val context = LocalContext.current
 
     // Se crea una instancia de la base de datos local, indicando el contexto, la clase base de datos y el nombre del archivo, permitiendo consultas en el hilo principal.
-    val db = Room.databaseBuilder(context, DatabaseCoche::class.java, Estructura.DataBase.NAME)
+    val db = Room.databaseBuilder(context, AppDB::class.java, Estructura.DB.NAME)
         .allowMainThreadQueries().build()
 
     // Obtención del DAO en cocheD, es decir, la interfaz para realizar operaciones CRUD sobre la tabla.
-    var cocheTitulo: CocheData? // Creamos el usuario cocheTitulo de CocheData
+    var cocheTitulo: CochesData? // Creamos el usuario cocheTitulo de CochesData
 
     // BARRA SUPERIOR
     Scaffold(
@@ -66,6 +71,11 @@ fun FormularioCoche(navController: NavController) {
                 modifier = Modifier.height(100.dp),
                 title = {
                     Text(text = "Registrar un Coche", fontSize = 20.sp)
+                },
+                navigationIcon = {
+                    IconButton(onClick = { navController.popBackStack() }) {
+                        Icon(imageVector = Lucide.ArrowLeft, contentDescription = "Icono atrás")
+                    }
                 },
                 colors = topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primary,
@@ -94,7 +104,8 @@ fun FormularioCoche(navController: NavController) {
                 modifier = Modifier.width(300.dp),
                 colors = OutlinedTextFieldDefaults.colors(
                     unfocusedBorderColor = Color.White,
-                    focusedTextColor = Color.White
+                    focusedTextColor = Color.White,
+                    unfocusedTextColor = Color.White
                 )
             )
 
@@ -107,7 +118,8 @@ fun FormularioCoche(navController: NavController) {
                 modifier = Modifier.width(300.dp),
                 colors = OutlinedTextFieldDefaults.colors(
                     unfocusedBorderColor = Color.White,
-                    focusedTextColor = Color.White
+                    focusedTextColor = Color.White,
+                    unfocusedTextColor = Color.White
                 )
             )
 
@@ -120,7 +132,8 @@ fun FormularioCoche(navController: NavController) {
                 modifier = Modifier.width(300.dp),
                 colors = OutlinedTextFieldDefaults.colors(
                     unfocusedBorderColor = Color.White,
-                    focusedTextColor = Color.White
+                    focusedTextColor = Color.White,
+                    unfocusedTextColor = Color.White
                 )
             )
 
@@ -133,7 +146,8 @@ fun FormularioCoche(navController: NavController) {
                 modifier = Modifier.width(300.dp),
                 colors = OutlinedTextFieldDefaults.colors(
                     unfocusedBorderColor = Color.White,
-                    focusedTextColor = Color.White
+                    focusedTextColor = Color.White,
+                    unfocusedTextColor = Color.White
                 )
             )
 
@@ -146,7 +160,8 @@ fun FormularioCoche(navController: NavController) {
                 modifier = Modifier.width(300.dp),
                 colors = OutlinedTextFieldDefaults.colors(
                     unfocusedBorderColor = Color.White,
-                    focusedTextColor = Color.White
+                    focusedTextColor = Color.White,
+                    unfocusedTextColor = Color.White
                 )
             )
 
@@ -159,7 +174,8 @@ fun FormularioCoche(navController: NavController) {
                 modifier = Modifier.width(300.dp),
                 colors = OutlinedTextFieldDefaults.colors(
                     unfocusedBorderColor = Color.White,
-                    focusedTextColor = Color.White
+                    focusedTextColor = Color.White,
+                    unfocusedTextColor = Color.White
                 )
             )
 
@@ -172,7 +188,8 @@ fun FormularioCoche(navController: NavController) {
                 modifier = Modifier.width(300.dp),
                 colors = OutlinedTextFieldDefaults.colors(
                     unfocusedBorderColor = Color.White,
-                    focusedTextColor = Color.White
+                    focusedTextColor = Color.White,
+                    unfocusedTextColor = Color.White
                 )
             )
 
@@ -181,7 +198,7 @@ fun FormularioCoche(navController: NavController) {
             Button(
                 onClick = {
                     // Obtiene el coche completo (si lo hay) en función del titulo a registrar. titulo es lo que ha introducido el usuario en el campo de texto "Titulo".
-                    cocheTitulo = db.cocheDao().getUnCoche(titulo)
+                    cocheTitulo = db.CocheDao().getCochePorTitulo(titulo)
 
                     // Validaciones básicas de campos
                     when {
@@ -235,24 +252,24 @@ fun FormularioCoche(navController: NavController) {
 
                         else -> {
                             // Almacena los datos en la base de datos Room
-                            val car =
-                                CocheData(
-                                    tituloCoche = titulo,
-                                    descripcionCoche = descripcion,
-                                    imagenCoche = imagen,
-                                    caballosCoche = caballos,
-                                    consumoCoche = consumo,
-                                    precioCoche = precio,
-                                    urlCoche = url
-                                )
+                            val car = CochesData(
+                                tituloCoche = titulo,
+                                descripcionCoche = descripcion,
+                                imagenCoche = imagen,
+                                caballosCoche = caballos,
+                                consumoCoche = consumo,
+                                precioCoche = precio,
+                                urlCoche = url,
+                                idUsuario = id
+                            )
 
                             // Insertamos el coche. Llamamos a nuevoCoche, pasando como argumento el coche car, usando la instancia cocheD para realizar operaciones sobre la tabla.
-                            db.cocheDao().nuevoCoche(car) // Alternativa a la inserción.
+                            db.CocheDao().nuevoCoche(car) // Alternativa a la inserción.
 
                             Toast.makeText(
                                 context, "Coche registrado correctamente", Toast.LENGTH_SHORT
                             ).show()
-                            navController.navigate(route = AppScreens.ListaCoches.route) // Ir a la segunda ventana de Resultados.
+                            navController.navigate(route = AppScreens.ListaCoches.route + "/${car.idCoche}") // Ir a la segunda ventana de Resultados.
                         }
                     }
                 }) {
@@ -261,7 +278,7 @@ fun FormularioCoche(navController: NavController) {
             Button(
                 onClick = {
                     Toast.makeText(context, "Ir a resultados", Toast.LENGTH_SHORT).show()
-                    navController.navigate(route = AppScreens.ListaCoches.route)
+                    navController.navigate(route = AppScreens.ListaCoches.route + "/${id}")
                 }) {
                 Text(text = "Ir a la lista de coches")
             }
