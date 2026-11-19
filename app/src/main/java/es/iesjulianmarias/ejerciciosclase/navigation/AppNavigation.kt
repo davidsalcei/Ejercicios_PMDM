@@ -17,8 +17,12 @@ import es.iesjulianmarias.ejerciciosclase.practicas.practica2.screens.VentanaLis
 import es.iesjulianmarias.ejerciciosclase.ejercicios.ejercicio7.Formulario
 import es.iesjulianmarias.ejerciciosclase.ejercicios.ejercicio7.Inicio
 import es.iesjulianmarias.ejerciciosclase.ejercicios.ejercicio7.Resultados
-import es.iesjulianmarias.ejerciciosclase.practicas.practica3.db.AppDB
-import es.iesjulianmarias.ejerciciosclase.practicas.practica3.db.Estructura
+import es.iesjulianmarias.ejerciciosclase.examen.db.AppDBExamen
+import es.iesjulianmarias.ejerciciosclase.examen.db.EstructuraExamen
+import es.iesjulianmarias.ejerciciosclase.examen.screens.Amigos
+import es.iesjulianmarias.ejerciciosclase.examen.screens.LoginExamen
+import es.iesjulianmarias.ejerciciosclase.examen.screens.PerfilUsuario
+import es.iesjulianmarias.ejerciciosclase.examen.screens.RegisterExamen
 import es.iesjulianmarias.ejerciciosclase.practicas.practica3.screens.FormularioCoche
 import es.iesjulianmarias.ejerciciosclase.practicas.practica3.screens.ListaCoches
 import es.iesjulianmarias.ejerciciosclase.practicas.practica3.screens.ListaUsuarios
@@ -32,14 +36,28 @@ fun AppNavigation() {
 
     // Apartado de base de datos
     val context = LocalContext.current
-    val db = Room.databaseBuilder(context, AppDB::class.java, Estructura.DB.NAME).allowMainThreadQueries().build()
-    val sesionDao = db.SesionDao().getEstadoSesion() // Obtener si hay sesion iniciada o no
+    val db = Room.databaseBuilder(context, AppDBExamen::class.java, EstructuraExamen.DB.NAME)
+        .allowMainThreadQueries().build()
+    val sesionDao = db.SesionDaoExamen().getEstadoSesion() // Obtener si hay sesion iniciada o no
 
     NavHost(
         navController = navController,
         // Comprobacion, si tiene la sesion iniciada una pantalla, si no otra
-        startDestination = if (sesionDao == null) AppScreens.LoginUsuario.route else AppScreens.ListaUsuarios.route
+        startDestination = if (sesionDao == null) AppScreens.LoginExamen.route else AppScreens.PerfilUsuario.route
     ) {
+        composable(route = AppScreens.LoginExamen.route) {
+            LoginExamen(navController)
+        }
+        composable(route = AppScreens.RegisterExamen.route) {
+            RegisterExamen(navController)
+        }
+        composable(route = AppScreens.PerfilUsuario.route) {
+            PerfilUsuario(navController)
+        }
+        composable(route = AppScreens.Amigos.route) {
+            Amigos(navController)
+        }
+
         composable(route = AppScreens.LoginUsuario.route) {
             LoginUsuario(navController)
         }

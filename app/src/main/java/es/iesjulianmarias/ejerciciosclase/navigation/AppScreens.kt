@@ -2,6 +2,11 @@ package es.iesjulianmarias.ejerciciosclase.navigation
 
 sealed class AppScreens (val route: String) {
 
+    object LoginExamen: AppScreens("LoginExamen")
+    object RegisterExamen: AppScreens("RegisterExamen")
+    object PerfilUsuario: AppScreens("PerfilUsuario")
+    object Amigos: AppScreens("Amigos")
+
     // Ejercicio 6 - Navegacion
     object PrimeraVentana: AppScreens("PrimeraVentana")
     object SegundaVentana: AppScreens("SegundaVentana")
