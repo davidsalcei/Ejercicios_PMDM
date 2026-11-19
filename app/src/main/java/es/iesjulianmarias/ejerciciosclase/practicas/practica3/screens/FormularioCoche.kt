@@ -42,9 +42,8 @@ import es.iesjulianmarias.ejerciciosclase.practicas.practica3.db.entities.Coches
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun FormularioCoche(navController: NavController, id: Int?) {
+fun FormularioCoche(navController: NavController) {
 
-    if (id == null) return // Comprobar si "id" es nulo
     // Variables de los datos recogidos
     var titulo by rememberSaveable { mutableStateOf("") }
     var descripcion by rememberSaveable { mutableStateOf("") }
@@ -61,8 +60,8 @@ fun FormularioCoche(navController: NavController, id: Int?) {
     val db = Room.databaseBuilder(context, AppDB::class.java, Estructura.DB.NAME)
         .allowMainThreadQueries().build()
 
-    // Obtención del DAO en cocheD, es decir, la interfaz para realizar operaciones CRUD sobre la tabla.
-    var cocheTitulo: CochesData? // Creamos el usuario cocheTitulo de CochesData
+    var cocheID: CochesData? // Creamos el usuario cocheTitulo de CochesData
+    val sesion = db.SesionDao().getEstadoSesion() // Obtenemos una sesion para el idUsuario
 
     // BARRA SUPERIOR
     Scaffold(
@@ -83,6 +82,7 @@ fun FormularioCoche(navController: NavController, id: Int?) {
                 )
             )
         }) { innerPadding ->
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -197,8 +197,8 @@ fun FormularioCoche(navController: NavController, id: Int?) {
 
             Button(
                 onClick = {
-                    // Obtiene el coche completo (si lo hay) en función del titulo a registrar. titulo es lo que ha introducido el usuario en el campo de texto "Titulo".
-                    cocheTitulo = db.CocheDao().getCochePorTitulo(titulo)
+                    // Obtiene el coche completo (si lo hay) en función del ID a registrar
+                    cocheID = db.CocheDao().getCochePorID(sesion?.idUsuario)
 
                     // Validaciones básicas de campos
                     when {
@@ -244,32 +244,33 @@ fun FormularioCoche(navController: NavController, id: Int?) {
                             ).show()
                         }
 
-                        cocheTitulo != null -> {
+                        cocheID != null -> {
                             Toast.makeText(
-                                context, "Ya existe un coche con ese titulo", Toast.LENGTH_SHORT
+                                context, "Ya existe un coche con ese ID", Toast.LENGTH_SHORT
                             ).show()
                         }
 
                         else -> {
-                            // Almacena los datos en la base de datos Room
-                            val car = CochesData(
-                                tituloCoche = titulo,
-                                descripcionCoche = descripcion,
-                                imagenCoche = imagen,
-                                caballosCoche = caballos,
-                                consumoCoche = consumo,
-                                precioCoche = precio,
-                                urlCoche = url,
-                                idUsuario = id
-                            )
-
-                            // Insertamos el coche. Llamamos a nuevoCoche, pasando como argumento el coche car, usando la instancia cocheD para realizar operaciones sobre la tabla.
-                            db.CocheDao().nuevoCoche(car) // Alternativa a la inserción.
+                            if (sesion != null) {
+                                // Almacena los datos en la base de datos Room
+                                val car = CochesData(
+                                    tituloCoche = titulo,
+                                    descripcionCoche = descripcion,
+                                    imagenCoche = imagen,
+                                    caballosCoche = caballos,
+                                    consumoCoche = consumo,
+                                    precioCoche = precio,
+                                    urlCoche = url,
+                                    idUsuario = sesion.idUsuario
+                                )
+                                // Insertamos el coche. Llamamos a nuevoCoche, pasando como argumento el coche car, usando la instancia cocheD para realizar operaciones sobre la tabla.
+                                db.CocheDao().nuevoCoche(car)
+                            }
 
                             Toast.makeText(
                                 context, "Coche registrado correctamente", Toast.LENGTH_SHORT
                             ).show()
-                            navController.navigate(route = AppScreens.ListaCoches.route + "/${car.idCoche}") // Ir a la segunda ventana de Resultados.
+                            navController.navigate(route = AppScreens.ListaCoches.route) // Ir a la segunda ventana de Resultados.
                         }
                     }
                 }) {
@@ -277,8 +278,8 @@ fun FormularioCoche(navController: NavController, id: Int?) {
             }
             Button(
                 onClick = {
-                    Toast.makeText(context, "Ir a resultados", Toast.LENGTH_SHORT).show()
-                    navController.navigate(route = AppScreens.ListaCoches.route + "/${id}")
+                    Toast.makeText(context, "Ir a lista de coches", Toast.LENGTH_SHORT).show()
+                    navController.navigate(route = AppScreens.ListaCoches.route)
                 }) {
                 Text(text = "Ir a la lista de coches")
             }

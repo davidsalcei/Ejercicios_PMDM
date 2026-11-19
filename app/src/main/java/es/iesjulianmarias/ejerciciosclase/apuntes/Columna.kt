@@ -2,6 +2,8 @@ package es.iesjulianmarias.ejerciciosclase.apuntes
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -28,6 +30,16 @@ fun Columna() {
         - Alignment.Stretch: se estira para ocupar todo el ancho de la columna
      */
     Column(modifier = Modifier.padding(top = 100.dp, start = 20.dp)) {
+        Text(text = "Texto en una linea dentro de un Column")
+    }
+
+    // Si tienes que hacer scroll / deslizar se hace de esta manera
+    val estado = rememberScrollState()
+    Column(
+        modifier = Modifier
+            .padding(top = 100.dp, start = 20.dp)
+            .verticalScroll(estado)
+    ) {
         Text(text = "Texto en una linea dentro de un Column")
     }
 

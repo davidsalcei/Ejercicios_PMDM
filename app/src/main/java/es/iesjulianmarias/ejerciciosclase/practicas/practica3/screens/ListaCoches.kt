@@ -47,9 +47,8 @@ import es.iesjulianmarias.ejerciciosclase.practicas.practica3.db.entities.Coches
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ListaCoches(navController: NavController, id: Int?) {
+fun ListaCoches(navController: NavController) {
 
-    if (id == null) return
     // Se obtiene el contexto actual, necesario para construir la base de datos Room y mostrar Toasts.
     val context = LocalContext.current
 
@@ -60,11 +59,14 @@ fun ListaCoches(navController: NavController, id: Int?) {
     // La aplicación está corriendo en un hilo, pero cuando nosotros estamos almacenando los datos, estos datos corren en un hilo distinto al que está corriendo la aplicación y eso no es la mejor solución para producción .
     // Se soluciona temporalmente con .allowMainThreadQueries() y si no, es necesario realizar corrutinas o hilos en background.
 
+    val sesion = db.SesionDao().getEstadoSesion() // Obtener idUsuario por Sesion
     // Obtención del DAO, es decir, la interfaz para realizar operaciones CRUD sobre la tabla.
     var listaCoches = mutableListOf<CochesData>()
 
-    // Ejecuta la consulta definida en el DAO que recupera todos los usuarios de la tabla.
-    listaCoches = db.CocheDao().getCochesUsuario(id).toMutableList()
+    if (sesion != null) {
+        // Ejecuta la consulta definida en el DAO que recupera todos los usuarios de la tabla.
+        listaCoches = db.CocheDao().getListaCoches(sesion.idUsuario).toMutableList()
+    }
 
     // BARRA SUPERIOR
     Scaffold(
@@ -141,7 +143,7 @@ fun ListaCoches(navController: NavController, id: Int?) {
                                     .fillMaxSize()
                                     .padding(start = 20.dp, top = 10.dp),
                                 onClick = {
-                                    navController.navigate(route = AppScreens.SoloCoche.route + "/${coche.idCoche}")
+                                    navController.navigate(route = AppScreens.SoloCoche.route)
                                 }
                             ) {
                                 Text(

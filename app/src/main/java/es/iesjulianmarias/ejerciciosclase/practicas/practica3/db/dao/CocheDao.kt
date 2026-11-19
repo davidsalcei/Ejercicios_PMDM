@@ -13,12 +13,9 @@ interface CocheDao {
     fun nuevoCoche(cochesData: CochesData)
 
     @Query("SELECT * FROM ${Estructura.Coche.TABLE_NAME} WHERE idUsuario = :idUsuario")
-    fun getCochesUsuario(idUsuario: Int): List<CochesData>
+    fun getListaCoches(idUsuario: Int): List<CochesData>
 
-    @Query("SELECT * FROM ${Estructura.Coche.TABLE_NAME} WHERE titulo = :titulo")
-    fun getCochePorTitulo(titulo: String): CochesData?
-
-    @Query("SELECT * FROM ${Estructura.Coche.TABLE_NAME} WHERE idCoche = :idCoche")
-    fun getCochePorID(idCoche: Int): CochesData?
+    @Query("SELECT * FROM ${Estructura.Coche.TABLE_NAME} WHERE idUsuario = :idUsuario")
+    fun getCochePorID(idUsuario: Int?): CochesData?
 
 }

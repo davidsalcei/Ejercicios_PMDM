@@ -19,5 +19,5 @@ data class UsuariosData (
     @ColumnInfo(name = Estructura.Usuario.APELLIDOS) val apellidosUsuario: String,
     @ColumnInfo(name = Estructura.Usuario.EMAIL) val email: String,
     @ColumnInfo(name = Estructura.Usuario.PASSWORD) val password: String,
-    @ColumnInfo(name = Estructura.Usuario.FECHA) val fecha: String
+    @ColumnInfo(name = Estructura.Usuario.FECHA) val fecha: String?
 )

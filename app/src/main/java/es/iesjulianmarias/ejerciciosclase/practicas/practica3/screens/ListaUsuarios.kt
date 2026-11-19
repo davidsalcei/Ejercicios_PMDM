@@ -43,11 +43,11 @@ fun ListaUsuarios(navController: NavHostController) {
     val db = Room.databaseBuilder(context, AppDB::class.java, Estructura.DB.NAME)
         .allowMainThreadQueries().build()
 
+    // Inicializamos una variable como una lista y obtenemos la lista de usuarios de la DB
     var listaUsuarios = mutableListOf<UsuariosData>()
     listaUsuarios = db.UsuarioDao().getListaUsuarios().toMutableList()
 
-    val sesion = db.SesionDao().getEstadoSesion()
-    val idUsuario = sesion?.idUsuario
+    val sesion = db.SesionDao().getEstadoSesion() // Obtener idUsuario de Sesion
 
     Scaffold(
         topBar = {
@@ -76,7 +76,8 @@ fun ListaUsuarios(navController: NavHostController) {
         ) {
 
             Row(
-                modifier = Modifier.fillMaxWidth().padding(top = 10.dp, bottom = 10.dp)) {
+                modifier = Modifier.fillMaxWidth().padding(top = 10.dp, bottom = 10.dp)
+            ) {
                 Text(text = "ID", color = Color.White,modifier = Modifier.weight(0.5f), textAlign = TextAlign.Center)
                 Text(text = "Nombre", color = Color.White,modifier = Modifier.weight(0.5f), textAlign = TextAlign.Center)
                 Text(text = "Apellidos", color = Color.White,modifier = Modifier.weight(0.5f), textAlign = TextAlign.Center)
@@ -91,20 +92,22 @@ fun ListaUsuarios(navController: NavHostController) {
                         Text(text = user.nombreUsuario, color = Color.White, modifier = Modifier.weight(0.5f), textAlign = TextAlign.Center)
                         Text(text = user.apellidosUsuario, color = Color.White, modifier = Modifier.weight(0.5f), textAlign = TextAlign.Center)
                         Text(text = user.email, color = Color.White, modifier = Modifier.weight(0.5f), textAlign = TextAlign.Center)
-                        Text(text = user.fecha, color = Color.White, modifier = Modifier.weight(0.5f), textAlign = TextAlign.Center)
+                        Text(text = "${user.fecha}", color = Color.White, modifier = Modifier.weight(0.5f), textAlign = TextAlign.Center)
                     }
                 }
             }
 
             Spacer(modifier = Modifier.height(20.dp))
+
+            // Si la sesion está iniciada, mostrará los botones
             if (sesion != null) {
                 Button(
-                    onClick = { navController.navigate(AppScreens.FormularioCoche.route + "/${idUsuario}") }
+                    onClick = { navController.navigate(AppScreens.FormularioCoche.route) }
                 ) { Text(text = "Ir a formulario del coche") }
 
                 Button(
                     onClick = {
-                        db.SesionDao().cerrarSesion(idUsuario)
+                        db.SesionDao().cerrarSesion(sesion.idUsuario)
                         navController.navigate(AppScreens.LoginUsuario.route)
                     }
                 ) { Text(text = "Cerrar sesion") }

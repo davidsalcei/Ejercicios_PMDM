@@ -52,6 +52,16 @@ import es.iesjulianmarias.ejerciciosclase.practicas.practica3.db.entities.Usuari
 @Composable
 fun LoginUsuario(navController: NavHostController) {
 
+    var email by rememberSaveable { mutableStateOf("") }
+
+    val password = rememberTextFieldState()
+    var passVisible by rememberSaveable { mutableStateOf(false) }
+
+    val context = LocalContext.current
+    val db = Room.databaseBuilder(context, AppDB::class.java, Estructura.DB.NAME)
+        .allowMainThreadQueries().build()
+    var usuarioComparar: UsuariosData?
+
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -73,16 +83,6 @@ fun LoginUsuario(navController: NavHostController) {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-
-            var email by rememberSaveable { mutableStateOf("") }
-
-            val password = rememberTextFieldState()
-            var passVisible by rememberSaveable { mutableStateOf(false) }
-
-            val context = LocalContext.current
-            val db = Room.databaseBuilder(context, AppDB::class.java, Estructura.DB.NAME)
-                .allowMainThreadQueries().build()
-            var usuarioComparar: UsuariosData?
 
             Text(
                 text = "Bienvenid@",
@@ -138,16 +138,18 @@ fun LoginUsuario(navController: NavHostController) {
                     if (password.text.isBlank() || email.isBlank()) {
                         Toast.makeText(context, "No puede haber campos en blanco", Toast.LENGTH_SHORT).show()
                     } else {
-                        usuarioComparar = db.UsuarioDao().getUsuario(email)
+                        usuarioComparar = db.UsuarioDao().getUsuario(email) // Conseguir datos de un usuario
 
-                        if (usuarioComparar != null && usuarioComparar?.password == password.text) {
+                        // Si hay datos de usuario y la contraseña es la misma que la introducida
+                        if (usuarioComparar != null && usuarioComparar?.password == calculoHash(password.text.toString())) {
 
+                            // Creamos una sesion con el idUsuario
                             val userSesion = SesionesData(
                                 idUsuario = usuarioComparar!!.idUsuario
                             )
                             db.SesionDao().nuevaSesion(userSesion)
 
-                            navController.navigate(route = AppScreens.FormularioCoche.route + "/${usuarioComparar!!.idUsuario}")
+                            navController.navigate(route = AppScreens.FormularioCoche.route)
                             Toast.makeText(context, "Has iniciado sesion", Toast.LENGTH_SHORT).show()
                         } else {
                             Toast.makeText(context, "Credenciales incorrectas. Intentalo de nuevo", Toast.LENGTH_SHORT).show()

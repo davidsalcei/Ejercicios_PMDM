@@ -16,6 +16,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedSecureTextField
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.PlainTooltip
 import androidx.compose.material3.SecureTextField
 import androidx.compose.material3.Text
@@ -109,6 +110,14 @@ fun Formularios() {
         OutlinedTextField(
             value = textoIngresado,
             onValueChange = { textoIngresado = it },
+            colors = OutlinedTextFieldDefaults.colors(
+                unfocusedBorderColor = Color.White,
+                focusedTextColor = Color.White,
+                unfocusedTextColor = Color.White,
+                unfocusedLabelColor = Color.White,
+                focusedBorderColor = Color.White,
+                focusedLabelColor = Color.White
+            ),
             label = { Text(text = "Campo de texto") }
         )
 

@@ -29,12 +29,15 @@ import es.iesjulianmarias.ejerciciosclase.practicas.practica3.screens.SoloCoche
 @Composable
 fun AppNavigation() {
     val navController = rememberNavController()
+
+    // Apartado de base de datos
     val context = LocalContext.current
     val db = Room.databaseBuilder(context, AppDB::class.java, Estructura.DB.NAME).allowMainThreadQueries().build()
-    val sesionDao = db.SesionDao().getEstadoSesion()
+    val sesionDao = db.SesionDao().getEstadoSesion() // Obtener si hay sesion iniciada o no
 
     NavHost(
         navController = navController,
+        // Comprobacion, si tiene la sesion iniciada una pantalla, si no otra
         startDestination = if (sesionDao == null) AppScreens.LoginUsuario.route else AppScreens.ListaUsuarios.route
     ) {
         composable(route = AppScreens.LoginUsuario.route) {
@@ -48,40 +51,14 @@ fun AppNavigation() {
         }
 
         // Practica 3
-        composable(
-            route = AppScreens.FormularioCoche.route + "/{id}",
-            arguments = listOf(
-                navArgument(name = "id") {
-                    type = NavType.IntType
-                }
-            )
-        ) {
-            FormularioCoche(navController, it.arguments?.getInt("id"))
-            //BackHandler(false) { } // Sirve para interceptar y manejar el evento del botón físico Atrás del dispositivo. El parámetro true indica que el sistema no ejecutará su comportamiento predeterminado (cerrar la app o regresar a la pantalla anterior).
+        composable(route = AppScreens.FormularioCoche.route) {
+            FormularioCoche(navController)
         }
-        composable(
-            route = AppScreens.ListaCoches.route + "/{id}",
-            arguments = listOf(
-                navArgument(name = "id") {
-                    type = NavType.IntType
-                }
-            )
-        ) {
-            ListaCoches(navController, it.arguments?.getInt("id"))
-            //BackHandler(false) { } // Sirve para interceptar y manejar el evento del botón físico Atrás del dispositivo. El parámetro true indica que el sistema no ejecutará su comportamiento predeterminado (cerrar la app o regresar a la pantalla anterior).
+        composable(route = AppScreens.ListaCoches.route) {
+            ListaCoches(navController)
         }
-        composable(
-            route = AppScreens.SoloCoche.route + "/{idCoche}",
-            arguments = listOf(
-                navArgument(name = "idCoche") {
-                    type = NavType.IntType
-                }
-            )
-        ) {
-            SoloCoche(navController, it.arguments?.getInt("idCoche"))
-            BackHandler(true) {
-                Toast.makeText(context, "No puedes volver todavía", Toast.LENGTH_SHORT).show()
-            }
+        composable(route = AppScreens.SoloCoche.route) {
+            SoloCoche(navController)
         }
 
         // Ejercicio 6 - Navegacion

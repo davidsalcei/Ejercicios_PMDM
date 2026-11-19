@@ -42,13 +42,13 @@ import es.iesjulianmarias.ejerciciosclase.practicas.practica3.db.entities.Coches
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SoloCoche(navController: NavController, idCoche: Int?) {
+fun SoloCoche(navController: NavController) {
 
-    if (idCoche == null) return
     val context = LocalContext.current // Necesario para Room y Toasts
     val db = Room.databaseBuilder(context, AppDB::class.java, Estructura.DB.NAME)
         .allowMainThreadQueries().build() // Instanciar base de datos
     var coche: CochesData?
+    val sesion = db.SesionDao().getEstadoSesion() // Obtener idUsuario por Sesion
 
     Scaffold(
         topBar = {
@@ -65,75 +65,77 @@ fun SoloCoche(navController: NavController, idCoche: Int?) {
                     }
                 })
         }) { innerPadding ->
-        coche = db.CocheDao().getCochePorID(idCoche)
+        if (sesion != null) {
+            coche = db.CocheDao().getCochePorID(sesion.idUsuario)
 
-        coche?.let {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(innerPadding)
-                    .background(Color.Black)
-            ) {
-
-                AsyncImage(
-                    model = it.imagenCoche,
-                    contentDescription = "",
+            coche?.let {
+                Column(
                     modifier = Modifier
-                        .padding(all = 10.dp)
-                        .background(color = Color.Transparent)
-                        .height(200.dp)
-                        .clip(shape = RoundedCornerShape(10.dp)),
-                    contentScale = ContentScale.FillWidth
-                )
-
-                Text(
-                    modifier = Modifier.padding(all = 10.dp),
-                    text = it.tituloCoche,
-                    fontSize = 30.sp,
-                    color = Color.White,
-                    fontWeight = FontWeight.Bold
-                )
-
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(10.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween
+                        .fillMaxSize()
+                        .padding(innerPadding)
+                        .background(Color.Black)
                 ) {
-                    BloqueDelMedio(it.caballosCoche, "Caballos")
-                    BloqueDelMedio(it.consumoCoche, "Consumo")
-                    BloqueDelMedio(it.precioCoche, "Precio")
-                }
 
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(all = 10.dp)
-                ) {
-                    Column() {
-                        val context = LocalContext.current
-                        Text(
-                            text = "Informacion adicional:",
-                            color = Color.White,
-                            fontSize = 20.sp,
-                            fontWeight = FontWeight.Bold
-                        )
-                        Text(
-                            modifier = Modifier.padding(top = 10.dp),
-                            text = it.descripcionCoche,
-                            color = Color.Magenta
-                        )
-                        Text(
-                            text = "Abrir wikipedia",
-                            modifier = Modifier
-                                .padding(all = 20.dp)
-                                .clickable(onClick = {
-                                    val url = it.urlCoche
-                                    val customTabsIntent = CustomTabsIntent.Builder().build()
-                                    customTabsIntent.launchUrl(context, url.toUri())
-                                }),
-                            color = Color.White
-                        )
+                    AsyncImage(
+                        model = it.imagenCoche,
+                        contentDescription = "",
+                        modifier = Modifier
+                            .padding(all = 10.dp)
+                            .background(color = Color.Transparent)
+                            .height(200.dp)
+                            .clip(shape = RoundedCornerShape(10.dp)),
+                        contentScale = ContentScale.FillWidth
+                    )
+
+                    Text(
+                        modifier = Modifier.padding(all = 10.dp),
+                        text = it.tituloCoche,
+                        fontSize = 30.sp,
+                        color = Color.White,
+                        fontWeight = FontWeight.Bold
+                    )
+
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(10.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        BloqueDelMedio(it.caballosCoche, "Caballos")
+                        BloqueDelMedio(it.consumoCoche, "Consumo")
+                        BloqueDelMedio(it.precioCoche, "Precio")
+                    }
+
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(all = 10.dp)
+                    ) {
+                        Column() {
+                            val context = LocalContext.current
+                            Text(
+                                text = "Informacion adicional:",
+                                color = Color.White,
+                                fontSize = 20.sp,
+                                fontWeight = FontWeight.Bold
+                            )
+                            Text(
+                                modifier = Modifier.padding(top = 10.dp),
+                                text = it.descripcionCoche,
+                                color = Color.Magenta
+                            )
+                            Text(
+                                text = "Abrir wikipedia",
+                                modifier = Modifier
+                                    .padding(all = 20.dp)
+                                    .clickable(onClick = {
+                                        val url = it.urlCoche
+                                        val customTabsIntent = CustomTabsIntent.Builder().build()
+                                        customTabsIntent.launchUrl(context, url.toUri())
+                                    }),
+                                color = Color.White
+                            )
+                        }
                     }
                 }
             }
